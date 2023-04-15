@@ -11,19 +11,16 @@ include(GNUInstallDirs)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-target_sources(${PROJECT_NAME} INTERFACE 
-    rapidxml_iterators.hpp
-    rapidxml_print.hpp
-    rapidxml_utils.hpp
-    rapidxml.hpp
-)
 
 target_include_directories(${PROJECT_NAME} 
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> )
 
 install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}_Targets )
+        EXPORT ${PROJECT_NAME}_Targets 
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 
 include(CMakePackageConfigHelpers)
@@ -37,6 +34,12 @@ configure_package_config_file(
     INSTALL_DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
 )
+
+install(
+    EXPORT ${PROJECT_NAME}_Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
 
 install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
               "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
